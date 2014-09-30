@@ -105,8 +105,10 @@ send(Message) ->
 %% Internal: builds the message string to be sent
 %% 
 %% returns: a String
+build_message({message, Key, Value, Type}) when is_integer(Value) ->
+  build_message({message, Key, integer_to_list(Value), Type});
 build_message({message, Key, Value, Type}) ->
-  lists:concat([Key, ":", io_lib:format("~w", [Value]), "|", Type]);
+  lists:flatten(lists:concat([Key, ":", io_lib:format("~s", [Value]), "|", Type]));
 build_message({message, Key, Value, Type, Samplerate}) ->
   lists:concat([build_message({message, Key, Value, Type}) | ["@", io_lib:format("~.2f", [1.0 / Samplerate])]]).
 
